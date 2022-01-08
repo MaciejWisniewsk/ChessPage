@@ -1,0 +1,6 @@
+<% layout('layouts/boilerplate')%>
+<% if(currentUser) { %>
+<h1>Welcome <%= currentUser.username %></h1>
+<% }else{ %>
+<h1>Welcome anonymous!</h1>
+<% } %>
