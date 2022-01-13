@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const catchAsync = require('../utils/catchAsync');
 const User = require('../models/user');
+const { isLoggedIn } = require('../middleware')
 
 router.get('/register', (req, res) => {
     res.render('users/register');
@@ -41,4 +42,35 @@ router.get('/logout', (req, res) => {
     res.redirect('/');
 })
 
+router.patch('/changePassword', isLoggedIn, catchAsync(async (req, res) => {
+    const user = await User.findById(req.user._id);
+    const { oldPassword, newPassword } = req.body;
+    user.changePassword(oldPassword, newPassword, err => {
+        if (err) {
+            if (err.name === 'IncorrectPasswordError') {
+                req.flash('error', 'Incorrect password!'); // Return error
+            } else {
+                req.flash('Something went wrong!')
+            }
+            return res.redirect('profile')
+        }
+        req.flash('success', 'Password changed successfully');
+        res.redirect('profile')
+    })
+}))
+
+router.get('/profile', isLoggedIn, (req, res) => {
+    res.render('users/profile')
+})
+
+router.get('/changePassword', isLoggedIn, (req, res) => {
+    res.render('users/passwordChangeForm')
+})
+
+router.delete('/deleteAccount', isLoggedIn, catchAsync(async (req, res) => {
+    await User.remove({ _id: req.user._id });
+    req.flash('success', 'Account Deleted');
+    req.logout();
+    res.redirect('/')
+}))
 module.exports = router;
