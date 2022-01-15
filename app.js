@@ -14,6 +14,7 @@ const fs = require('fs');
 require('dotenv').config();
 
 const userRoutes = require('./routes/users');
+const roomsRoutes = require('./routes/rooms')
 
 const dbConnDataMongo = {
     host: process.env.MONGO_HOST || '127.0.0.1',
@@ -68,6 +69,7 @@ app.use((req, res, next) => {
 
 
 app.use('/', userRoutes);
+app.use('/rooms', roomsRoutes);
 
 app.get('/', (req, res) => {
     res.render('home')
