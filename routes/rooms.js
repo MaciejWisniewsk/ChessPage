@@ -37,9 +37,13 @@ router.post('/', isLoggedIn, catchAsync(async (req, res) => {
 
 router.patch('/:id', isLoggedIn, catchAsync(async (req, res) => {
     const room = await Room.findById(req.params.id);
+    if (room.guest) {
+        req.flash('error', 'Room is full now!');
+        return res.redirect('/rooms')
+    }
     if (room.host._id === req.user._id) {
         req.flash('error', 'You cannto join to your own room!');
-        res.redirect('/rooms')
+        return res.redirect('/rooms')
     }
     room.guest = req.user._id;
     await room.save();
