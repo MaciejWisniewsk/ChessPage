@@ -1,0 +1,7 @@
+#chatMessages{
+    height: 50vh;
+}
+
+textarea{
+    resize: none;
+}

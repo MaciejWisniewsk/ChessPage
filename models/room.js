@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const ChatMessage = require('./chatMessage')
 
 const roomSchema = new Schema({
     name: {
@@ -16,6 +17,22 @@ const roomSchema = new Schema({
     guest: {
         type: Schema.Types.ObjectId,
         ref: 'User'
+    },
+    chatMessages: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'ChatMessage'
+        }
+    ]
+})
+
+roomSchema.post('findOneAndDelete', async doc => {
+    if (doc) {
+        await ChatMessage.deleteMany({
+            _id: {
+                $in: doc.chatMessages
+            }
+        })
     }
 })
 

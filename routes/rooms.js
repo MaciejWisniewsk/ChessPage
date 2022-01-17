@@ -18,6 +18,25 @@ router.get('/', isLoggedIn, catchAsync(async (req, res) => {
     res.render('rooms/index', { activeRooms, userWaitingRooms, userInGameRooms });
 }));
 
+router.get('/:id', isLoggedIn, catchAsync(async (req, res) => {
+    const room = await Room.findById(req.params.id).populate({
+        path: 'chatMessages',
+        populate: {
+            path: 'author'
+        }
+    });
+    if (!room) {
+        req.flash('error', 'Room with given id doesn\'t exsist')
+        return res.redirect('/rooms')
+    }
+    console.log(room)
+    if (!(room.host._id.equals(req.user._id) || room.guest._id.equals(req.user._id))) {
+        req.flash('error', 'You don\'t belong to this room!')
+        return res.redirect('/rooms')
+    }
+    res.render('rooms/gameRoom', { room })
+}))
+
 router.post('/', isLoggedIn, catchAsync(async (req, res) => {
     const user = await User.findById(req.user._id);
     const checkRoomUnique = await Room.findOne({ name: req.body.name });

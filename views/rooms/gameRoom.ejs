@@ -1,0 +1,39 @@
+<% layout('layouts/boilerplate')%>
+<link rel="stylesheet" href="/stylesheets/style.css">
+<h1><%=room.name%></h1>
+<div class="row">
+    <div class="col-md-4 mt-3">
+        <div class="card">
+            <div class="card-header text-center">
+                Chat
+            </div>
+            <div id="chatMessages" class="list-group overflow-auto">
+                <% room.chatMessages.forEach(message => { %>
+                <% if(message.author.equals(currentUser._id)) {%>
+                <div class="list-group-item list-group-item-light">You: <%= message.text %></div>
+                <% } else { %>
+                <div class="list-group-item list-group-item-dark"><%= message.author.username%>: <%= message.text %>
+                </div>
+                <%  }}) %>
+            </div>
+            <form id="sendMessage" action="#">
+                <div class="row gx-0">
+                    <div class="col-9">
+                        <textarea rows="1" class="form-control" name="text" id="message"></textarea>
+                    </div>
+                    <div class="col-3 d-flex justify-content-center align-items-center">
+                        <button class="btn btn-primary w-100 h-100" type="submit">Send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<script src="/javascripts/jquery-3.6.0.min.js"></script>
+<script>
+    const userStringified = '<%-JSON.stringify(currentUser)%>'
+    const roomStringified = '<%-JSON.stringify(room)%>'
+</script>
+<script src="/javascripts/roomChat.js"></script>
