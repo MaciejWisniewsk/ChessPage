@@ -9,9 +9,12 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
-var https = require('https');
+const https = require('https');
 const fs = require('fs');
+const client = require('./mqtt/connection')
 require('dotenv').config();
+require('./mqtt/subscriptions');
+require('./mqtt/onMessage');
 
 const userRoutes = require('./routes/users');
 const roomsRoutes = require('./routes/rooms')
@@ -64,6 +67,7 @@ app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
+    res.locals.warning = req.flash('warning')
     next();
 })
 
@@ -94,3 +98,7 @@ const options = {
 https.createServer(options, app).listen(3000, () => {
     console.log('Serving on port 3000')
 })
+
+client.on('connect', () => {
+    console.log('Connnected to MQTT broker!')
+});

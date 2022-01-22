@@ -7,6 +7,11 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         unique: true
+    },
+    points: {
+        type: Number,
+        required: true,
+        min: 0
     }
 });
 

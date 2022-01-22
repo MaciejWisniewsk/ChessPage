@@ -12,7 +12,7 @@ router.get('/register', (req, res) => {
 router.post('/register', catchAsync(async (req, res, next) => {
     try {
         const { email, username, password } = req.body;
-        const user = new User({ email, username });
+        const user = new User({ email, username, points: 0 });
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, err => {
             if (err) return next(err);
@@ -48,7 +48,7 @@ router.patch('/changePassword', isLoggedIn, catchAsync(async (req, res) => {
     user.changePassword(oldPassword, newPassword, err => {
         if (err) {
             if (err.name === 'IncorrectPasswordError') {
-                req.flash('error', 'Incorrect password!'); // Return error
+                req.flash('error', 'Incorrect password!');
             } else {
                 req.flash('Something went wrong!')
             }

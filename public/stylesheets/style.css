@@ -5,3 +5,7 @@
 textarea{
     resize: none;
 }
+
+#board{
+    width: 100%
+}

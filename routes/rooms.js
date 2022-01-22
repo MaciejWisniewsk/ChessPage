@@ -4,7 +4,6 @@ const catchAsync = require('../utils/catchAsync');
 const User = require('../models/user');
 const Room = require('../models/room');
 const { isLoggedIn } = require('../middleware');
-const user = require('../models/user');
 
 router.get('/', isLoggedIn, catchAsync(async (req, res) => {
     const userWaitingRooms = await Room.find({ guest: null, host: req.user._id });
@@ -29,7 +28,6 @@ router.get('/:id', isLoggedIn, catchAsync(async (req, res) => {
         req.flash('error', 'Room with given id doesn\'t exsist')
         return res.redirect('/rooms')
     }
-    console.log(room)
     if (!(room.host._id.equals(req.user._id) || room.guest._id.equals(req.user._id))) {
         req.flash('error', 'You don\'t belong to this room!')
         return res.redirect('/rooms')
@@ -54,19 +52,38 @@ router.post('/', isLoggedIn, catchAsync(async (req, res) => {
     res.redirect('/rooms')
 }))
 
-router.patch('/:id', isLoggedIn, catchAsync(async (req, res) => {
-    const room = await Room.findById(req.params.id);
-    if (room.guest) {
-        req.flash('error', 'Room is full now!');
+// router.patch('/:id', isLoggedIn, catchAsync(async (req, res) => {
+//     const room = await Room.findById(req.params.id);
+//     if (room.guest) {
+//         req.flash('error', 'Room is full now!');
+//         return res.redirect('/rooms')
+//     }
+//     if (room.host._id === req.user._id) {
+//         req.flash('error', 'You cannto join to your own room!');
+//         return res.redirect('/rooms')
+//     }
+//     room.guest = req.user._id;
+//     await room.save();
+//     res.redirect('/rooms')
+// }))
+
+router.post('/:id/game_over', isLoggedIn, catchAsync(async (req, res) => {
+    const { id } = req.params
+    if (await Room.exists({ _id: id })) {
+
+    }
+    const room = await Room.exists({ _id: id }) && await Room.findById(id);
+    if (!(room.host._id.equals(req.user._id) || room.guest._id.equals(req.user._id))) {
+        req.flash('error', 'You can\'t end somebody elses game! >:(')
         return res.redirect('/rooms')
     }
-    if (room.host._id === req.user._id) {
-        req.flash('error', 'You cannto join to your own room!');
-        return res.redirect('/rooms')
+    if (req.body.isDraw) {
+        await room.remove();
+        req.flash('warning', 'The game ended in a draw!')
+        return res.redirect('/room')
+    } else {
+
     }
-    room.guest = req.user._id;
-    await room.save();
-    res.redirect('/rooms')
 }))
 
 router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {

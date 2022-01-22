@@ -23,7 +23,10 @@ const roomSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'ChatMessage'
         }
-    ]
+    ],
+    gameFen: {
+        type: String
+    }
 })
 
 roomSchema.post('findOneAndDelete', async doc => {

@@ -1,39 +1,69 @@
+<link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css"
+    integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
 <% layout('layouts/boilerplate')%>
 <link rel="stylesheet" href="/stylesheets/style.css">
-<h1><%=room.name%></h1>
-<div class="row">
-    <div class="col-md-4 mt-3">
-        <div class="card">
-            <div class="card-header text-center">
-                Chat
-            </div>
-            <div id="chatMessages" class="list-group overflow-auto">
-                <% room.chatMessages.forEach(message => { %>
-                <% if(message.author.equals(currentUser._id)) {%>
-                <div class="list-group-item list-group-item-light">You: <%= message.text %></div>
-                <% } else { %>
-                <div class="list-group-item list-group-item-dark"><%= message.author.username%>: <%= message.text %>
-                </div>
-                <%  }}) %>
-            </div>
-            <form id="sendMessage" action="#">
-                <div class="row gx-0">
-                    <div class="col-9">
-                        <textarea rows="1" class="form-control" name="text" id="message"></textarea>
+<h1 class="text-center"><%=room.name%></h1>
+<div class="row mb-5" id="room">
+    <div class="col-md-6 mt-3">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <button class="btn btn-danger my-3 mx-auto d-block" data-bs-toggle="modal"
+                    data-bs-target="#leaveGameModal">Leave game</button>
+                <div class="card">
+                    <div class="card-header text-center">
+                        Chat
                     </div>
-                    <div class="col-3 d-flex justify-content-center align-items-center">
-                        <button class="btn btn-primary w-100 h-100" type="submit">Send</button>
+                    <div id="chatMessages" class="list-group overflow-auto">
+                        <% room.chatMessages.forEach(message => { %>
+                        <% if(message.author.equals(currentUser._id)) {%>
+                        <div class="list-group-item list-group-item-light">You: <%= message.text %></div>
+                        <% }else if(message.author.username === "Bot"){ %>
+                        <div class="list-group-item list-group-item-warning"><%= message.author.username%>:
+                            <%= message.text %>
+                        </div>
+                        <% } else { %>
+                        <div class="list-group-item list-group-item-dark"><%= message.author.username%>:
+                            <%= message.text %>
+                        </div>
+                        <%  }}) %>
                     </div>
+                    <form id="sendMessage" action="#">
+                        <div class="row gx-0">
+                            <div class="col-9">
+                                <textarea rows="1" class="form-control" name="text" id="message"></textarea>
+                            </div>
+                            <div class="col-3 d-flex justify-content-center align-items-center">
+                                <button class="btn btn-primary w-100 h-100" type="submit">Send</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mt-3">
+        <div class=" row">
+            <div class="col-md-10 offset-md-1">
+                <div id="board"></div>
+            </div>
         </div>
     </div>
 </div>
 
 <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+<script src="https://unpkg.com/chess.js@0.12.0/chess.js"></script>
 <script src="/javascripts/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2"
+    crossorigin="anonymous"></script>
+
+<script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"
+    integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD"
+    crossorigin="anonymous"></script>
 <script>
     const userStringified = '<%-JSON.stringify(currentUser)%>'
     const roomStringified = '<%-JSON.stringify(room)%>'
 </script>
+<script src="/javascripts/mqttConnection.js"></script>
 <script src="/javascripts/roomChat.js"></script>
+<script src="/javascripts/chessGame.js"></script>
