@@ -4,6 +4,7 @@ const whiteSquareGrey = '#a9a9a9'
 const blackSquareGrey = '#696969'
 const gameMoveTopic = `/rooms/${room._id}/game/move`
 const gameOverTopic = `/rooms/${room._id}/game/over`
+const opponent_id = user._id === room.host ? room.guest : room.host;
 
 client.subscribe(gameMoveTopic)
 client.subscribe(gameOverTopic)
@@ -91,14 +92,14 @@ function updateStatus() {
 
     if (game.in_checkmate()) {
         status = 'Game over, ' + moveColor + ' is in checkmate.';
-
+        const winner_id = moveColor.toLowerCase() !== playerColor ? user._id : opponent_id;
+        client.publish(gameOverTopic, JSON.stringify({ winner_id }))
     }
     else if (game.in_draw()) {
         status = 'Game over, drawn position';
-        console.log('publishing...')
         client.publish(gameOverTopic, JSON.stringify({ isDraw: true }))
     }
-    if (game.in_check()) {
+    else {
         status = moveColor + ' to move'
         if (game.in_check()) {
             status += ', ' + moveColor + ' is in check'
@@ -114,10 +115,9 @@ function updateStatus() {
     client.publish(chatTopic, JSON.stringify(statusChatMessage))
 }
 
-!room.gameFen && updateStatus()
+!room.gameFen && !room.chatMessages.length && updateStatus()
 
 client.on('message', (topic, message) => {
-    console.log('elloo', topic, message)
     switch (topic) {
         case gameMoveTopic:
             const { _id, move } = JSON.parse(message.toString())
@@ -127,11 +127,17 @@ client.on('message', (topic, message) => {
             }
             break;
         case gameOverTopic:
-            const { isDraw } = JSON.parse(message.toString());
+            const { isDraw, winner_id } = JSON.parse(message.toString());
             if (isDraw) {
-                $('#room').prepend('<div class="alert alert-warning alert-dismissible fade show my-5" role="alert">The game enden in draw! The room will be close in 10s!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
-                setTimeout(() => window.location.replace("/rooms"), 10000)
+                $('#room').prepend('<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">The game enden in draw! The room will be closed in 10s!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
             }
+            else if (winner_id === user._id) {
+                $('#room').prepend('<div class="alert alert-success alert-dismissible fade show my-3" role="alert">You won! The room will be closed in 10s!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
+            } else {
+                $('#room').prepend('<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">You lost! The room will be closed in 10s!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
+            }
+            window.scrollTo(0, 0);
+            setTimeout(() => window.location.replace("/rooms"), 10000)
             break;
         default:
             return {}
