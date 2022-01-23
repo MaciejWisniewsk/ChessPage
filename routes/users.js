@@ -12,7 +12,7 @@ router.get('/register', (req, res) => {
 router.post('/register', catchAsync(async (req, res, next) => {
     try {
         const { email, username, password } = req.body;
-        const user = new User({ email, username, points: 0 });
+        const user = new User({ email, username, points: 0, special: false });
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, err => {
             if (err) return next(err);
@@ -73,4 +73,10 @@ router.delete('/deleteAccount', isLoggedIn, catchAsync(async (req, res) => {
     req.logout();
     res.redirect('/')
 }))
+
+router.get('/ranking', catchAsync(async (req, res) => {
+    const ranking = await User.find({ special: false }).sort({ points: -1 });
+    res.render('users/ranking', { ranking })
+}))
+
 module.exports = router;

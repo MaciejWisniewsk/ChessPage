@@ -21,14 +21,17 @@
 
 <div class="row">
     <div class="col-md-6 offset-md-3">
-        <div class="card mb-3">
+        <div class="card text-center mb-3">
             <% if(currentUser) { %>
-            <h1 class="card-title text-center mt-2"><%= currentUser.username %></h1>
-            <div class="card-body d-flex justify-content-center">
-                <a class="card-link btn btn-info me-2" href="/changePassword">Change Password</a>
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+            <h1 class="card-header"><%= currentUser.username %></h1>
+            <div class="card-body">
+                <h5 class="card-title">Score: <%= currentUser.points %> </h5>
+            </div>
+            <div class="card-footer text-muted">
+                <a class="card-link btn btn-info me-2 mt-2" href="/changePassword">Change Password</a>
+                <button type="button" class="btn btn-danger mt-2" data-bs-toggle="modal"
                     data-bs-target="#deleteAccountModal">
-                    Delete
+                    Delete Account
                 </button>
             </div>
             <% }else { %>

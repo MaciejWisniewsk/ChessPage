@@ -12,6 +12,10 @@ const UserSchema = new Schema({
         type: Number,
         required: true,
         min: 0
+    },
+    special: {
+        type: Boolean,
+        required: true
     }
 });
 
