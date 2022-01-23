@@ -2,12 +2,31 @@
     integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
 <% layout('layouts/boilerplate')%>
 <link rel="stylesheet" href="/stylesheets/style.css">
+
+<div class="modal fade" id="leaveGameModal" tabindex="-1" aria-labelledby="leaveGameModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteAccountModal">Leave Game</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to surrender this game?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button class="btn btn-danger" id="leaveGameButton">Give up</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h1 class="text-center"><%=room.name%></h1>
 <div class="row mb-5" id="room">
     <div class="col-md-6 mt-3">
         <div class="row">
             <div class="col-md-10 offset-md-1">
-                <button class="btn btn-danger my-3 mx-auto d-block" data-bs-toggle="modal"
+                <button class="btn btn-danger my-3 mx-auto" id="surrenderButton" data-bs-toggle="modal"
                     data-bs-target="#leaveGameModal">Leave game</button>
                 <div class="card">
                     <div class="card-header text-center">

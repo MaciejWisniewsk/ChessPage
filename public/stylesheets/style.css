@@ -9,3 +9,7 @@ textarea{
 #board{
     width: 100%
 }
+
+#surrenderButton{
+    display: block;
+}

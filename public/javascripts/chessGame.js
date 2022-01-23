@@ -127,14 +127,17 @@ client.on('message', (topic, message) => {
             }
             break;
         case gameOverTopic:
-            const { isDraw, winner_id } = JSON.parse(message.toString());
+            $('#surrenderButton').hide()
+            const { isDraw, winner_id, surrender } = JSON.parse(message.toString());
             if (isDraw) {
                 $('#room').prepend('<div class="alert alert-warning alert-dismissible fade show my-3" role="alert">The game enden in draw! The room will be closed in 10s!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
             }
             else if (winner_id === user._id) {
-                $('#room').prepend('<div class="alert alert-success alert-dismissible fade show my-3" role="alert">You won! The room will be closed in 10s!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
+                const surrenderMessage = surrender ? 'The opponent gave up this game!' : ''
+                $('#room').prepend(`<div class="alert alert-success alert-dismissible fade show my-3" role="alert">You won! The room will be closed in 10s!\n${surrenderMessage}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`)
             } else {
-                $('#room').prepend('<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">You lost! The room will be closed in 10s!<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>')
+                const surrenderMessage = surrender ? 'You surrendered the game!' : ''
+                $('#room').prepend(`<div class="alert alert-danger alert-dismissible fade show my-3" role="alert">You lost! The room will be closed in 10s!\n${surrenderMessage}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`)
             }
             window.scrollTo(0, 0);
             setTimeout(() => window.location.replace("/rooms"), 10000)
@@ -158,3 +161,9 @@ const config = {
 }
 const board = Chessboard('board', config)
 $(window).resize(board.resize)
+
+$('#leaveGameButton').on('click', () => {
+    client.publish(gameOverTopic, JSON.stringify({ winner_id: opponent_id, surrender: true }))
+    $('#surrenderButton').hide();
+    $('#leaveGameModal').modal('hide')
+})
