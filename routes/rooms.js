@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const User = require('../models/user');
 const Room = require('../models/room');
 const { isLoggedIn } = require('../middleware');
+const client = require('../mqtt/connection')
 
 router.get('/', isLoggedIn, catchAsync(async (req, res) => {
     const userWaitingRooms = await Room.find({ guest: null, host: req.user._id });
@@ -48,6 +49,7 @@ router.post('/', isLoggedIn, catchAsync(async (req, res) => {
     }
     const room = new Room({ name: req.body.name, host: user });
     await room.save();
+    client.publish('rooms/new', JSON.stringify({ ...room._doc }))
     req.flash('success', 'Room created');
     res.redirect('/rooms')
 }))
@@ -64,6 +66,7 @@ router.patch('/:id', isLoggedIn, catchAsync(async (req, res) => {
     }
     room.guest = req.user._id;
     await room.save();
+    client.publish('rooms/patch', JSON.stringify({ ...room._doc }))
     res.redirect('/rooms')
 }))
 
@@ -87,12 +90,14 @@ router.patch('/:id', isLoggedIn, catchAsync(async (req, res) => {
 // }))
 
 router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
-    const room = await Room.findById(req.params.id);
+    const { id } = req.params;
+    const room = await Room.findById(id);
     if (!room.host._id.equals(req.user._id)) {
         req.flash('error', 'You must be the room owner!');
         return res.redirect('/rooms')
     }
     await room.remove();
+    client.publish('rooms/delete', JSON.stringify({ _id: id }))
     req.flash('success', 'Room successfully deleted.');
     res.redirect('/rooms')
 }))
