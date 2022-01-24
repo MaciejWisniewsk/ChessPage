@@ -31,8 +31,6 @@ client.on('message', async function (topic, message) {
             await winner.save();
             await loser.save();
         }
-        setTimeout(async () => {
-            await room.remove()
-        }, 8000)
+        await room.remove()
     }
 });
