@@ -74,9 +74,30 @@ router.delete('/deleteAccount', isLoggedIn, catchAsync(async (req, res) => {
     res.redirect('/')
 }))
 
+const rank = async (id) => {
+    const user = await User.findById(id);
+    const result = await User.aggregate().match({ points: { $gt: user.points } }).group({ _id: 0, count: { $sum: 1 } })
+    return result[0] ? result[0].count + 1 : 1
+}
+
+const ranking = async (users) => {
+    return await Promise.all(users.map(async record => {
+        const { username, points, _id } = record._doc;
+        const rank_number = await rank(_id);
+        return { username, points, rank_number }
+    }))
+}
 router.get('/ranking', catchAsync(async (req, res) => {
-    const ranking = await User.find({ special: false }).sort({ points: -1 });
-    res.render('users/ranking', { ranking })
+    const users = await User.find({ special: false }).sort({ points: -1 }).limit(50);
+    const ranked_users = await ranking(users)
+    res.render('users/ranking', { ranking: ranked_users })
+}))
+
+router.get('/ranking/byPattern', catchAsync(async (req, res) => {
+    const { pattern } = req.query
+    const users = await User.find({ username: { $regex: pattern }, special: false }).sort({ points: -1 }).limit(50)
+    const ranked_users = await ranking(users)
+    res.send(ranked_users)
 }))
 
 module.exports = router;
