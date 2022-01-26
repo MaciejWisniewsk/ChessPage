@@ -17,7 +17,9 @@ require('./mqtt/subscriptions');
 require('./mqtt/onMessage');
 
 const userRoutes = require('./routes/users');
-const roomsRoutes = require('./routes/rooms')
+const roomsRoutes = require('./routes/rooms');
+const postsRoutes = require('./routes/posts');
+const commentsRoutes = require('./routes/comments');
 
 const dbConnDataMongo = {
     host: process.env.MONGO_HOST || '127.0.0.1',
@@ -74,6 +76,8 @@ app.use((req, res, next) => {
 
 app.use('/', userRoutes);
 app.use('/rooms', roomsRoutes);
+app.use('/posts', postsRoutes);
+app.use('/posts/:id/comments', commentsRoutes);
 
 app.get('/', (req, res) => {
     res.render('home')

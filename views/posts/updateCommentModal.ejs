@@ -1,15 +1,16 @@
-<div class="modal fade" id="createRoomModal" tabindex="-1" aria-labelledby="createRoomModal" aria-hidden="true">
+<div class="modal fade" id="updateCommentModal" tabindex="-1" aria-labelledby="updateCommentModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create Room</h5>
+                <h5 class="modal-title">Update Comment</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/rooms" method="POST" class="validated-form" novalidate>
+            <!-- action and textarea value to be added in jquery script -->
+            <form action="" method="POST" class="validated-form" id="updateCommentForm" novalidate>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label" for="name">Room Name</label>
-                        <input class="form-control" type="text" id="name" name="name" required>
+                        <textarea rows="5" class="form-control" name="text" id="updateCommentTextarea"
+                            required></textarea>
                         <div class="valid-feedback">
                             Looks good!
                         </div>

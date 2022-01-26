@@ -70,24 +70,6 @@ router.patch('/:id', isLoggedIn, catchAsync(async (req, res) => {
     res.redirect('/rooms')
 }))
 
-// router.post('/:id/game_over', isLoggedIn, catchAsync(async (req, res) => {
-//     const { id } = req.params
-//     if (await Room.exists({ _id: id })) {
-
-//     }
-//     const room = await Room.exists({ _id: id }) && await Room.findById(id);
-//     if (!(room.host._id.equals(req.user._id) || room.guest._id.equals(req.user._id))) {
-//         req.flash('error', 'You can\'t end somebody elses game! >:(')
-//         return res.redirect('/rooms')
-//     }
-//     if (req.body.isDraw) {
-//         await room.remove();
-//         req.flash('warning', 'The game ended in a draw!')
-//         return res.redirect('/room')
-//     } else {
-
-//     }
-// }))
 
 router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params;
