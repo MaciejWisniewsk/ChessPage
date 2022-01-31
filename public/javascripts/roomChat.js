@@ -30,5 +30,5 @@ $("#sendMessage").submit(event => {
         username,
         text
     }
-    client.publish(chatTopic, JSON.stringify(dataToSend))
+    client.publish(`/server/rooms/${room._id}/chat`, JSON.stringify(dataToSend))
 });

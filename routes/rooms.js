@@ -5,6 +5,7 @@ const User = require('../models/user');
 const Room = require('../models/room');
 const { isLoggedIn } = require('../middleware');
 const client = require('../mqtt/connection')
+const { roomSchema } = require('../schemas.js')
 
 router.get('/', isLoggedIn, catchAsync(async (req, res) => {
     const userWaitingRooms = await Room.find({ guest: null, host: req.user._id });
@@ -38,6 +39,11 @@ router.get('/:id', isLoggedIn, catchAsync(async (req, res) => {
 
 router.post('/', isLoggedIn, catchAsync(async (req, res) => {
     const user = await User.findById(req.user._id);
+    const { error } = roomSchema.validate(req.body);
+    if (error) {
+        req.flash('error', 'You cannot incject code into room name!');
+        return res.redirect('/rooms')
+    }
     const checkRoomUnique = await Room.findOne({ name: req.body.name });
     if (checkRoomUnique) {
         req.flash('error', 'Room with that name already exists');
