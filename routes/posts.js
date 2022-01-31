@@ -12,7 +12,12 @@ router.get('/', catchAsync(async (req, res) => {
 
 router.get('/:id', catchAsync(async (req, res) => {
     const { id } = req.params
-    const post = await Post.findById(id).populate({
+    const post = await Post.findById(id, (err, _) => {
+        if (err) {
+            req.flash('error', 'Post with given id doesn\'t exists');
+            return res.redirect('/posts')
+        }
+    }).clone().populate({
         path: 'comments',
         populate: {
             path: 'author'
@@ -29,6 +34,10 @@ router.get('/:id/edit', isLoggedIn, isPostAuthor, catchAsync(async (req, res) =>
 
 router.put('/:id', isLoggedIn, isPostAuthor, catchAsync(async (req, res) => {
     const { id } = req.params
+    if (req.body.title.length > 40) {
+        req.flash('error', 'Title can contain maximally 40 characters')
+        return res.redirect(`/posts/${id}`)
+    }
     await Post.findByIdAndUpdate(id, req.body)
     res.redirect(`/posts/${id}`)
 }))
@@ -40,6 +49,10 @@ router.delete('/:id', isLoggedIn, isPostAuthor, catchAsync(async (req, res) => {
 }))
 
 router.post('/', isLoggedIn, catchAsync(async (req, res) => {
+    if (req.body.title.length > 40) {
+        req.flash('error', 'Title can contain maximally 40 characters')
+        return res.redirect('/posts')
+    }
     const user = await User.findById(req.user._id);
     const post = new Post({ ...req.body, author: user })
     await post.save()

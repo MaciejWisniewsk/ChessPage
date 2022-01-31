@@ -10,6 +10,7 @@
     "ejs-lint": "^1.2.1",
     "ejs-mate": "^3.0.0",
     "express": "^4.17.2",
+    "express-mongo-sanitize": "^2.2.0",
     "express-session": "^1.17.2",
     "method-override": "^3.0.0",
     "mongoose": "^6.1.5",
