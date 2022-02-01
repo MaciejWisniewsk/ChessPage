@@ -3,7 +3,9 @@ const game = new Chess();
 const whiteSquareGrey = '#a9a9a9'
 const blackSquareGrey = '#696969'
 const gameMoveTopic = `/rooms/${room._id}/game/move`
+const gameMoveServerTopic = `/server/rooms/${room._id}/game/move`
 const gameOverTopic = `/rooms/${room._id}/game/over`
+const gameOverServerTopic = `/server/rooms/${room._id}/game/over`
 const opponent_id = user._id === room.host ? room.guest : room.host;
 
 client.subscribe(gameMoveTopic)
@@ -29,7 +31,7 @@ function greySquare(square) {
 
 
 
-function onDragStart(source, piece, position, orientation) {
+function onDragStart(_, piece, _, _) {
     if (game.game_over()) return false
 
     if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
@@ -49,20 +51,20 @@ function onDrop(source, target) {
     })
 
     if (move === null) return 'snapback';
+    const { username, _id } = user;
     const dataToSend = {
-        ...user,
+        username,
+        _id,
         move,
-        fen: game.fen()
     }
-    client.publish(gameMoveTopic, JSON.stringify(dataToSend))
-    updateStatus()
+    client.publish(gameMoveServerTopic, JSON.stringify(dataToSend))
 }
 
 function onSnapEnd() {
     board.position(game.fen())
 }
 
-function onMouseoverSquare(square, piece) {
+function onMouseoverSquare(square, _) {
     if (isMoveEnabled()) {
         const moves = game.moves({
             square: square,
@@ -73,49 +75,14 @@ function onMouseoverSquare(square, piece) {
 
         greySquare(square)
 
-        moves.forEach((move, index) => greySquare(moves[index].to))
+        moves.forEach((_, index) => greySquare(moves[index].to))
     }
 }
 
-function onMouseoutSquare(square, piece) {
+function onMouseoutSquare(_, _) {
     removeGreySquares()
 }
 
-
-function updateStatus() {
-    let status = ''
-
-    let moveColor = 'White'
-    if (game.turn() === 'b') {
-        moveColor = 'Black'
-    }
-
-    if (game.in_checkmate()) {
-        status = 'Game over, ' + moveColor + ' is in checkmate.';
-        const winner_id = moveColor.toLowerCase() !== playerColor ? user._id : opponent_id;
-        client.publish(gameOverTopic, JSON.stringify({ winner_id }))
-    }
-    else if (game.in_draw()) {
-        status = 'Game over, drawn position';
-        client.publish(gameOverTopic, JSON.stringify({ isDraw: true }))
-    }
-    else {
-        status = moveColor + ' to move'
-        if (game.in_check()) {
-            status += ', ' + moveColor + ' is in check'
-        }
-    }
-
-    //bot has special account
-    statusChatMessage = {
-        text: status,
-        username: 'Bot',
-        _id: "61eae5eb776b4ec37f73e851"
-    }
-    client.publish(chatTopic, JSON.stringify(statusChatMessage))
-}
-
-!room.gameFen && !room.chatMessages.length && updateStatus()
 
 client.on('message', (topic, message) => {
     switch (topic) {
@@ -163,7 +130,7 @@ const board = Chessboard('board', config)
 $(window).resize(board.resize)
 
 $('#leaveGameButton').on('click', () => {
-    client.publish(gameOverTopic, JSON.stringify({ winner_id: opponent_id, surrender: true }))
+    client.publish(gameOverServerTopic, JSON.stringify({ winner_id: opponent_id, surrender: true }))
     $('#surrenderButton').hide();
     $('#leaveGameModal').modal('hide')
 })

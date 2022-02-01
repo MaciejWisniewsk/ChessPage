@@ -6,6 +6,7 @@ const Room = require('../models/room');
 const { isLoggedIn } = require('../middleware');
 const client = require('../mqtt/connection')
 const { roomSchema } = require('../schemas.js')
+const updateGameStatus = require('../mqtt/updateGameStatus');
 
 router.get('/', isLoggedIn, catchAsync(async (req, res) => {
     const userWaitingRooms = await Room.find({ guest: null, host: req.user._id });
@@ -55,7 +56,8 @@ router.post('/', isLoggedIn, catchAsync(async (req, res) => {
     }
     const room = new Room({ name: req.body.name, host: user });
     await room.save();
-    client.publish('rooms/new', JSON.stringify({ ...room._doc }))
+    client.publish('rooms/new', JSON.stringify({ ...room._doc }));
+    updateGameStatus(null, `/server/rooms/${room._id}/chat`, null);
     req.flash('success', 'Room created');
     res.redirect('/rooms')
 }))
