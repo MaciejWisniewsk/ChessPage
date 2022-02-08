@@ -23,10 +23,10 @@
 
 <h1 class="text-center"><%=room.name%></h1>
 <div class="row mb-5" id="room">
-    <div class="col-md-6 mt-3">
+    <div class="col-lg-6 mt-3">
         <div class="row">
-            <div class="col-md-10 offset-md-1">
-                <button class="btn btn-danger my-3 mx-auto" id="surrenderButton" data-bs-toggle="modal"
+            <div class="col-lg-10 offset-lg-1">
+                <button class="btn btn-danger mb-3 mx-auto" id="surrenderButton" data-bs-toggle="modal"
                     data-bs-target="#leaveGameModal">Leave game</button>
                 <div class="card">
                     <div class="card-header text-center">
@@ -60,17 +60,17 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6 mt-3">
+    <div class="col-lg-6 my-5">
         <div class=" row">
-            <div class="col-md-10 offset-md-1">
+            <div class="col-lg-10 offset-lg-1">
                 <div id="board"></div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-<script src="https://unpkg.com/chess.js@0.12.0/chess.js"></script>
+<script src="https://unpkg.com/mqtt/dist/mqtt.min.js" crossorigin></script>
+<script src="https://unpkg.com/chess.js@0.12.0/chess.js" crossorigin></script>
 <script src="/javascripts/jquery-3.6.0.min.js"></script>
 
 <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"

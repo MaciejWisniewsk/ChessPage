@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV !== 'production'){
+    require('dotenv').config()
+}
+
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -12,8 +16,8 @@ const mongoSanitize = require('express-mongo-sanitize');
 const User = require('./models/user');
 const https = require('https');
 const fs = require('fs');
-const client = require('./mqtt/connection')
-require('dotenv').config();
+const client = require('./mqtt/connection');
+const helmet = require('helmet');
 require('./mqtt/subscriptions');
 require('./mqtt/onMessage');
 
@@ -47,6 +51,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize())
 
 const sessionConfig = {
+    name: 'session',
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
@@ -60,6 +65,43 @@ const sessionConfig = {
 
 app.use(session(sessionConfig))
 app.use(flash());
+app.use(helmet());
+
+const scriptSrcUrls = [
+    "https://cdn.jsdelivr.net",
+    'https://unpkg.com/mqtt/dist/mqtt.min.js',
+    'https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/',
+    'https://unpkg.com/chess.js@0.12.0/'
+];
+const styleSrcUrls = [
+    "https://cdn.jsdelivr.net",
+    'https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/'
+];
+const connectSrcUrls = [
+    'ws:'
+];
+const fontSrcUrls = [
+    "https://fonts.gstatic.com"
+];
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            objectSrc: [],
+            imgSrc: [
+                "'self'",
+                "blob:",
+                "data:"
+            ],
+            fontSrc: ["'self'",'data:', ...fontSrcUrls],
+        },
+    })
+);
+app.use(helmet.crossOriginResourcePolicy({ policy: "same-origin" }));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -75,7 +117,6 @@ app.use((req, res, next) => {
     res.locals.warning = req.flash('warning')
     next();
 })
-
 
 app.use('/', userRoutes);
 app.use('/rooms', roomsRoutes);
