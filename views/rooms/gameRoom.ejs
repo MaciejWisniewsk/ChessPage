@@ -34,7 +34,7 @@
                     </div>
                     <div id="chatMessages" class="list-group overflow-auto">
                         <% room.chatMessages.forEach(message => { %>
-                        <% if(message.author.equals(currentUser._id)) {%>
+                        <% if(message.author && message.author.equals(currentUser._id)) {%>
                         <div class="list-group-item list-group-item-light">You: <%= message.text %></div>
                         <% }else if(message.author.username === "Bot"){ %>
                         <div class="list-group-item list-group-item-warning"><%= message.author.username%>:

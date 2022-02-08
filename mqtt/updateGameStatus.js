@@ -3,7 +3,7 @@ const client = require('./connection');
 const updateGameStatus = (game, chatTopic, gameOverTopic, whiteId, blackId) => {
     const botAccount = {
         username: 'Bot',
-        _id: "61eae5eb776b4ec37f73e851"
+        _id: process.env.BOT_ID
     }
     let status = ''
 

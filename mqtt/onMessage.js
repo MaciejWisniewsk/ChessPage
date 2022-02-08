@@ -39,7 +39,7 @@ client.on('message', async function (topic, message) {
         const room = await Room.findById(room_id);
         const { winner_id, surrender } = JSON.parse(message.toString())
         const game = new Chess();
-        game.load(room.gameFen)
+        room.gameFen && game.load(room.gameFen)
         if (!game.game_over() && !surrender) return
         if (winner_id) {
             const loser_id = room.host.equals(winner_id) ? room.guest : room.host;
