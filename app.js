@@ -152,8 +152,9 @@ const options = {
     cert: fs.readFileSync(process.env.CERTIFICATE_PATH)
 };
 
-https.createServer(options, app).listen(3000, () => {
-    console.log('Serving on port 3000')
+const port = process.env.PORT || 3000;
+https.createServer(options, app).listen(port, () => {
+    console.log(`Serving on port ${port}`)
 })
 
 client.on('connect', () => {
