@@ -26,14 +26,11 @@ const roomsRoutes = require('./routes/rooms');
 const postsRoutes = require('./routes/posts');
 const commentsRoutes = require('./routes/comments');
 
-const dbConnDataMongo = {
-    host: process.env.MONGO_HOST || '127.0.0.1',
-    port: process.env.MONGO_PORT || 27017,
-    database: process.env.MONGO_DATABASE || 'chess'
-};
+const db_url = process.env.DB_URL;
 
+const MongoDBStore = require('connect-mongo');
 mongoose
-    .connect(`mongodb://${dbConnDataMongo.host}:${dbConnDataMongo.port}/${dbConnDataMongo.database}`)
+    .connect(db_url)
     .then(response => {
         console.log(`Connected to MongoDB. Database name: "${response.connections[0].name}"`)
     })
@@ -50,7 +47,19 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize())
 
+const store =  MongoDBStore.create({
+    mongoUrl: db_url,
+    touchAfter: 24 * 3600,
+    crypto:{
+        secret: process.env.SECRET
+    }
+})
+
+store.on('error',e => {
+    console.log('Session store error!',e)
+})
 const sessionConfig = {
+    store,
     name: 'session',
     secret: process.env.SECRET,
     resave: false,
