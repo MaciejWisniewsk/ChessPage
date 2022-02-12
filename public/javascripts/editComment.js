@@ -8,7 +8,6 @@
         "action",
         `/posts/${postId}/comments/${commentId}?_method=PUT`
       );
-      console.log($("#updateCommentForm").attr("action"));
       $("#updateCommentTextarea").val(data.text);
       $("#updateCommentModal").modal("show");
     });

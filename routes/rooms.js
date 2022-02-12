@@ -52,7 +52,6 @@ router.get(
       req.flash("error", "You don't belong to this room!");
       return res.redirect("/rooms");
     }
-    console.log(room);
     res.render("rooms/gameRoom", { room });
   })
 );

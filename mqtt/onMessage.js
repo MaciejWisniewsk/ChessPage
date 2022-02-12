@@ -23,7 +23,6 @@ client.on("message", async function (topic, message) {
       room.chatMessages.push(chatMessage);
       await chatMessage.save();
       await room.save();
-      console.log(room);
       client.publish(roomTopic, JSON.stringify({ _id, username, text }));
     }
   } else if (topic.match(/^\/server\/rooms\/[^/]*\/game\/move$/)) {
