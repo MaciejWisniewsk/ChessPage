@@ -1,15 +1,15 @@
-#chatMessages{
-    height: 50vh;
+#chatMessages {
+  height: 50vh;
 }
 
-textarea{
-    resize: none;
+textarea {
+  resize: none;
 }
 
-#board{
-    width: 100%
+#board {
+  width: 100%;
 }
 
-#surrenderButton{
-    display: block;
+#surrenderButton {
+  display: block;
 }

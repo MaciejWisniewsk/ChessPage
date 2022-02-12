@@ -1,63 +1,62 @@
 <% layout('layouts/boilerplate')%>
 <%- include('./createRoomModal')%>
 <div class="d-flex justify-content-between">
-    <h1>Rooms</h1>
-    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#createRoomModal">
-        Create Room
-    </button>
+  <h1>Rooms</h1>
+  <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#createRoomModal">
+    Create Room
+  </button>
 </div>
 
 <div class="row">
-    <div class="col-md-4">
-        <div class="card mt-3" id="activeRooms">
-            <div class="card-header">
-                Your Active Games
-            </div>
-            <% userInGameRooms.forEach(room => {%>
-            <div class="card-body d-flex justify-content-between" id="<%= room._id%>">
-                <h5 class="card-title"><%= room.name %></h5>
-                <a class="btn btn-warning" href="/rooms/<%= room._id%>">Play</a>
-            </div>
-            <% }) %>
-        </div>
+  <div class="col-md-4">
+    <div class="card mt-3" id="activeRooms">
+      <div class="card-header">
+        Your Active Games
+      </div>
+      <% userInGameRooms.forEach(room => {%>
+      <div class="card-body d-flex justify-content-between" id="<%= room._id%>">
+        <h5 class="card-title"><%= room.name %></h5>
+        <a class="btn btn-warning" href="/rooms/<%= room._id%>">Play</a>
+      </div>
+      <% }) %>
     </div>
-    <div class="col-md-4">
-        <div class="card mt-3">
-            <div class="card-header" id="waitingRooms">
-                Waiting for the oponent
-            </div>
-            <% userWaitingRooms.forEach(room => {%>
-            <div class="card-body d-flex justify-content-between" id="<%= room._id%>">
-                <h5 class="card-title"><%= room.name %></h5>
-                <form action="/rooms/<%=room._id%>?_method=DELETE" method="POST" class="validated-form" novalidate>
-                    <button class="btn btn-danger">Delete</a>
-                </form>
-            </div>
-            <% }) %>
-        </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card mt-3">
+      <div class="card-header" id="waitingRooms">
+        Waiting for the oponent
+      </div>
+      <% userWaitingRooms.forEach(room => {%>
+      <div class="card-body d-flex justify-content-between" id="<%= room._id%>">
+        <h5 class="card-title"><%= room.name %></h5>
+        <form action="/rooms/<%=room._id%>?_method=DELETE" method="POST" class="validated-form" novalidate>
+          <button class="btn btn-danger">Delete</a>
+        </form>
+      </div>
+      <% }) %>
     </div>
+  </div>
 
-    <div class="col-md-4">
-        <div class="card mt-3" id="availableRooms">
-            <div class="card-header">
-                Available Rooms
-            </div>
-            <% activeRooms.forEach(room => {%>
-            <div class="card-body d-flex justify-content-between" id="<%= room._id%>">
-                <h5 class="card-title"><%= room.name %></h5>
-                <form action="/rooms/<%=room._id%>?_method=PATCH" method="POST" class="validated-form" novalidate>
-                    <button class="btn btn-primary">Join room</a>
-                </form>
-            </div>
-            <% }) %>
-        </div>
+  <div class="col-md-4">
+    <div class="card mt-3" id="availableRooms">
+      <div class="card-header">
+        Available Rooms
+      </div>
+      <% activeRooms.forEach(room => {%>
+      <div class="card-body d-flex justify-content-between" id="<%= room._id%>">
+        <h5 class="card-title"><%= room.name %></h5>
+        <form action="/rooms/<%=room._id%>?_method=PATCH" method="POST" class="validated-form" novalidate>
+          <button class="btn btn-primary">Join room</a>
+        </form>
+      </div>
+      <% }) %>
     </div>
+  </div>
 </div>
 
 <script src="https://unpkg.com/mqtt/dist/mqtt.min.js" crossorigin></script>
 <script>
-    const userStringified = '<%-JSON.stringify(currentUser)%>'
+  const userStringified = '<%-JSON.stringify(currentUser)%>';
 </script>
-<script src="/javascripts/mqttConnection.js"></script>
 <script src="/javascripts/jquery-3.6.0.min.js"></script>
 <script src="/javascripts/roomsMqtt.js"></script>

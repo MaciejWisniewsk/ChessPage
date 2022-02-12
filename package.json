@@ -2,7 +2,7 @@
   "name": "chess-page",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts":{
+  "scripts": {
     "start": "node app.js"
   },
   "license": "MIT",
