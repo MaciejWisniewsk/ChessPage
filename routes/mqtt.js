@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { isLoggedIn } = require("../middleware");
 
-router.get("/credentials", (req, res) => {
+router.get("/credentials", isLoggedIn, (req, res) => {
   res.send({
     username: process.env.MQTT_USERNAME,
     password: process.env.MQTT_PASSWORD,
