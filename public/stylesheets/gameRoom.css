@@ -8,8 +8,30 @@ textarea {
 
 #board {
   width: 100%;
+  border-radius: 5px;
 }
 
 #surrenderButton {
   display: block;
+}
+
+
+.board-b72b1{
+  border: none;
+}
+
+.board-b72b1 > .row-5277c:first-child > div:first-child{
+  border-top-left-radius: 10px;
+}
+
+.board-b72b1 > .row-5277c:first-child > div:nth-child(8){
+  border-top-right-radius: 10px;
+}
+
+.board-b72b1 > .row-5277c:last-child > div:first-child{
+  border-bottom-left-radius: 10px;
+}
+
+.board-b72b1 > .row-5277c:last-child > div:nth-child(8){
+  border-bottom-right-radius: 10px;
 }
