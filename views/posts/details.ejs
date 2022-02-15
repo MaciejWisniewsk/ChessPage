@@ -5,50 +5,45 @@
 <%- include('./updateCommentModal')%>
 
 <div class="row">
-    <div class="col-md-6 offset-md-3">
-        <div class="card mb-3">
-            <h1 class="card-header"><%= post.title %></h1>
-            <div class="card-body">
-                <h5 class="card-title"><%= post.content %> </h5>
-            </div>
-            <div class="card-footer text-muted d-flex justify-content-between">
-                <small><%=post.author.username%></small>
-                <% if(currentUser) { %>
-                <div>
-                    <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#createCommentModal">Add comment</button>
-                    <% if(post.author.equals(currentUser._id)) { %>
-                    <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#deletePostModal">Delete</button>
-                    <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal"
-                        data-bs-target="#updatePostModal">Edit</button>
-                    <% } %>
-                </div>
-                <% } %>
-            </div>
+  <div class="col-md-6 offset-md-3">
+    <div class="card mb-3 bg-dark">
+      <h1 class="card-header"><%= post.title %></h1>
+      <div class="card-body">
+        <h5 class="card-title"><%= post.content %> </h5>
+      </div>
+      <div class="card-footer text-muted d-flex justify-content-between">
+        <small><%=post.author.username%></small>
+        <% if(currentUser) { %>
+        <div>
+          <button class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#createCommentModal">Add comment</button>
+          <% if(post.author.equals(currentUser._id)) { %>
+          <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePostModal">Delete</button>
+          <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#updatePostModal">Edit</button>
+          <% } %>
         </div>
-        <h3 class="text-center">Comments</h3>
-        <% post.comments.forEach(comment => { %>
-        <div class="card mb-3 ">
-            <div class="card-body">
-                <div class="card-subtitle mb-2 text-muted d-flex justify-content-between">
-                    <h6>By <%= comment.author.username%></h6>
-                    <%  if( currentUser && comment.author.equals(currentUser._id))  {%>
-                    <div>
-                        <button class="btn btn-sm btn-secondary edit-comment"
-                            id="commentEditButton-<%= comment._id %>">Edit</button>
-                        <form action="/posts/<%=post._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST"
-                            class="d-inline-block">
-                            <button class="btn btn-sm btn-danger">Delete</button>
-                        </form>
-                    </div>
-                    <% } %>
-                </div>
-                <p class="card-text"><%= comment.text %></p>
-            </div>
-        </div>
-        <% }) %>
+        <% } %>
+      </div>
     </div>
+    <h3 class="text-center">Comments</h3>
+    <% post.comments.forEach(comment => { %>
+    <div class="card mb-3 bg-dark">
+      <div class="card-body">
+        <div class="card-subtitle mb-2 text-muted d-flex justify-content-between">
+          <h6>By <%= comment.author.username%></h6>
+          <%  if( currentUser && comment.author.equals(currentUser._id))  {%>
+          <div>
+            <button class="btn btn-sm btn-secondary edit-comment" id="commentEditButton-<%= comment._id %>">Edit</button>
+            <form action="/posts/<%=post._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST" class="d-inline-block">
+              <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </div>
+          <% } %>
+        </div>
+        <p class="card-text"><%= comment.text %></p>
+      </div>
+    </div>
+    <% }) %>
+  </div>
 </div>
 
 <script src="/javascripts/jquery-3.6.0.min.js"></script>

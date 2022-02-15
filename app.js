@@ -88,10 +88,11 @@ const scriptSrcUrls = [
 ];
 const styleSrcUrls = [
   "https://cdn.jsdelivr.net",
-  "https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/",
+  "https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/"
 ];
 const connectSrcUrls = ["ws:"];
 const fontSrcUrls = ["https://fonts.gstatic.com"];
+const imgSrcUrls = ["https://images.unsplash.com/"];
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -101,7 +102,7 @@ app.use(
       styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
       workerSrc: ["'self'", "blob:"],
       objectSrc: [],
-      imgSrc: ["'self'", "blob:", "data:"],
+      imgSrc: ["'self'", "blob:", "data:", ...imgSrcUrls],
       fontSrc: ["'self'", "data:", ...fontSrcUrls],
     },
   })
@@ -120,6 +121,7 @@ const mqttCredentials = {
   url: process.env.MQTT_URL,
   password: process.env.MQTT_PASSWORD,
 };
+
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   res.locals.success = req.flash("success");

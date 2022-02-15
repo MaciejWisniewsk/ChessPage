@@ -1,0 +1,19 @@
+body{
+    min-height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
+    url("https://images.unsplash.com/photo-1560174038-da43ac74f01b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2057&q=80");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: rgba(255,255,255,0.7);
+}
+
+table tr td, table tr th{
+    background-color: rgba(0,0,0, 0.3) !important;
+    color: rgba(255,255,255,0.7);
+}
+
+
+table tbody tr:hover{
+    background-color: rgba(0,0,0, 0.4) !important;
+}

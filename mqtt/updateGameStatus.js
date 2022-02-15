@@ -29,7 +29,6 @@ const updateGameStatus = (game, chatTopic, gameOverTopic, whiteId, blackId) => {
     text: status,
     ...botAccount,
   };
-  console.log(statusChatMessage);
   client.publish(chatTopic, JSON.stringify(statusChatMessage));
 };
 

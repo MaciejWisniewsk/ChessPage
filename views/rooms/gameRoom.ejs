@@ -1,18 +1,18 @@
 <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
 <% layout('layouts/boilerplate')%>
-<link rel="stylesheet" href="/stylesheets/style.css">
+<link rel="stylesheet" href="/stylesheets/gameRoom.css">
 
 <div class="modal fade" id="leaveGameModal" tabindex="-1" aria-labelledby="leaveGameModal" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-secondary">
         <h5 class="modal-title" id="deleteAccountModal">Leave Game</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         Are you sure you want to surrender this game?
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer border-secondary">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button class="btn btn-danger" id="leaveGameButton">Give up</button>
       </div>
@@ -26,7 +26,7 @@
     <div class="row">
       <div class="col-lg-10 offset-lg-1">
         <button class="btn btn-danger mb-3 mx-auto" id="surrenderButton" data-bs-toggle="modal" data-bs-target="#leaveGameModal">Leave game</button>
-        <div class="card">
+        <div class="card bg-dark">
           <div class="card-header text-center">
             Chat
           </div>
@@ -34,9 +34,9 @@
             <% room.chatMessages.forEach(message => { %>
             <% if(!message.author) return %>
             <% if(message.author && message.author.equals(currentUser._id)) {%>
-            <div class="list-group-item list-group-item-light">You: <%= message.text %></div>
+            <div class="list-group-item list-group-item-secondary">You: <%= message.text %></div>
             <% }else if(message.author.username === "Bot"){ %>
-            <div class="list-group-item list-group-item-warning">
+            <div class="list-group-item list-group-item-primary">
               <%= message.author.username%>: <%= message.text %>
             </div>
             <% } else { %>
@@ -48,7 +48,7 @@
           <form id="sendMessage" action="#">
             <div class="row gx-0">
               <div class="col-9">
-                <textarea rows="1" class="form-control" name="text" id="message"></textarea>
+                <textarea rows="1" class="form-control bg-dark text-white border-secondary" name="text" id="message"></textarea>
               </div>
               <div class="col-3 d-flex justify-content-center align-items-center">
                 <button class="btn btn-primary w-100 h-100" type="submit">Send</button>

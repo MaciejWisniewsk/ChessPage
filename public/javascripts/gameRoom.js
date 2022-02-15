@@ -13,11 +13,11 @@
           const { _id, username, text } = JSON.parse(message.toString());
           if (_id === user._id) {
             $("#chatMessages").append(
-              `<div class="list-group-item list-group-item-light">You: ${text}</div>`
+              `<div class="list-group-item list-group-item-secondary">You: ${text}</div>`
             );
           } else if (username === "Bot") {
             $("#chatMessages").append(
-              `<div class="list-group-item list-group-item-warning">Bot: ${text}</div>`
+              `<div class="list-group-item list-group-item-primary">Bot: ${text}</div>`
             );
           } else {
             $("#chatMessages").append(

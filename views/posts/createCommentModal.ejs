@@ -1,24 +1,24 @@
 <div class="modal fade" id="createCommentModal" tabindex="-1" aria-labelledby="createCommentModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Add Comment</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Add Comment</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/posts/<%=post._id%>/comments" method="POST" class="validated-form" novalidate>
+        <div class="modal-body">
+          <div class="mb-3">
+            <textarea rows="5" class="form-control bg-dark text-white border-secondary" name="text" required></textarea>
+            <div class="valid-feedback">
+              Looks good!
             </div>
-            <form action="/posts/<%=post._id%>/comments" method="POST" class="validated-form" novalidate>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <textarea rows="5" class="form-control" name="text" required></textarea>
-                        <div class="valid-feedback">
-                            Looks good!
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-success">Submit</button>
-                </div>
-            </form>
+          </div>
         </div>
+        <div class="modal-footer border-secondary">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
