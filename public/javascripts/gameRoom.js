@@ -188,6 +188,10 @@
     const board = Chessboard("board", config);
     $(window).resize(board.resize);
 
+    $('#board').on('scroll touchmove touchend touchstart contextmenu',(e) => {
+      e.preventDefault();
+    });
+
     $("#leaveGameButton").on("click", () => {
       client.publish(
         gameOverServerTopic,
