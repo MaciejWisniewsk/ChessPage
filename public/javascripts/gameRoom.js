@@ -78,7 +78,7 @@
       $square.css("background", background);
     }
 
-    function onDragStart(_, piece, _, _) {
+    function onDragStart(square, piece, _, _) {
       if (game.game_over()) return false;
 
       if (
@@ -88,6 +88,7 @@
       ) {
         return false;
       }
+      markPossibleMoves(square)
     }
 
     function onDrop(source, target) {
@@ -114,7 +115,11 @@
     }
 
     function onMouseoverSquare(square, _) {
-      if (isMoveEnabled()) {
+      markPossibleMoves(square)
+    }
+
+    function markPossibleMoves(square){
+        if (isMoveEnabled()) {
         const moves = game.moves({
           square: square,
           verbose: true,
