@@ -1,5 +1,6 @@
 #chatMessages {
   height: 50vh;
+  scroll-behavior: smooth;
 }
 
 textarea {

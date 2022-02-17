@@ -7,6 +7,12 @@
     const chatTopic = `/rooms/${room._id}/chat`;
     client.subscribe(chatTopic);
 
+
+    function scrollChatMessegesToBottom(){
+      $("#chatMessages").scrollTop($("#chatMessages")[0].scrollHeight);
+    }
+
+    scrollChatMessegesToBottom();
     client.on("message", function (topic, message) {
       switch (topic) {
         case chatTopic:
@@ -24,6 +30,7 @@
               `<div class="list-group-item list-group-item-dark">${username}: ${text}</div>`
             );
           }
+          scrollChatMessegesToBottom();
           break;
         default:
           return {};
@@ -46,6 +53,14 @@
         JSON.stringify(dataToSend)
       );
     });
+
+    $("#message").keypress(function (e) {
+      if(e.which === 13 && !e.shiftKey) {
+          e.preventDefault();
+          $("#sendMessage").submit();
+      }
+    });
+
 
     const playerColor = user._id === room.host ? "white" : "black";
     const game = new Chess();
