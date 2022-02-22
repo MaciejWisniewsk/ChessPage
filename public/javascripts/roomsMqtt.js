@@ -9,7 +9,7 @@
       const room = JSON.parse(message.toString());
       switch (topic) {
         case "rooms/new":
-          if (user._id !== room.host) {
+          if (user._id !== room.host._id) {
             $("#availableRooms")
               .append(`<div class="card-body d-flex justify-content-between" id="${room._id}">
                                                   <h5 class="card-title">${room.name}</h5>
