@@ -23,7 +23,6 @@ const userRoutes = require("./routes/users");
 const roomsRoutes = require("./routes/rooms");
 const postsRoutes = require("./routes/posts");
 const commentsRoutes = require("./routes/comments");
-const mqttRoutes = require("./routes/mqtt");
 
 const db_url = process.env.DB_URL;
 
@@ -88,7 +87,7 @@ const scriptSrcUrls = [
 ];
 const styleSrcUrls = [
   "https://cdn.jsdelivr.net",
-  "https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/"
+  "https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/",
 ];
 const connectSrcUrls = ["ws:"];
 const fontSrcUrls = ["https://fonts.gstatic.com"];
@@ -124,6 +123,7 @@ const mqttCredentials = {
 
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
+  res.locals.mqttCredentials = mqttCredentials;
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   res.locals.warning = req.flash("warning");
@@ -134,7 +134,6 @@ app.use("/", userRoutes);
 app.use("/rooms", roomsRoutes);
 app.use("/posts", postsRoutes);
 app.use("/posts/:id/comments", commentsRoutes);
-app.use("/mqtt", mqttRoutes);
 
 app.get("/", (req, res) => {
   res.render("home");
