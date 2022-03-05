@@ -14,7 +14,7 @@ router.post(
   catchAsync(async (req, res, next) => {
     try {
       const { email, username, password } = req.body;
-      const user = new User({ email, username, points: 0, special: false });
+      const user = new User({ email, username, points: 0 });
       const registeredUser = await User.register(user, password);
       req.login(registeredUser, (err) => {
         if (err) return next(err);
@@ -112,9 +112,7 @@ const ranking = async (users) => {
 router.get(
   "/ranking",
   catchAsync(async (req, res) => {
-    const users = await User.find({ special: false })
-      .sort({ points: -1 })
-      .limit(50);
+    const users = await User.find().sort({ points: -1 }).limit(50);
     const ranked_users = await ranking(users);
     res.render("users/ranking", { ranking: ranked_users });
   })
@@ -126,7 +124,6 @@ router.get(
     const { pattern } = req.query;
     const users = await User.find({
       username: { $regex: pattern },
-      special: false,
     })
       .sort({ points: -1 })
       .limit(50);

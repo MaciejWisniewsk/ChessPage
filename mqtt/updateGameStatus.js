@@ -1,10 +1,6 @@
 const client = require("./connection");
 
 const updateGameStatus = (game, chatTopic, gameOverTopic, whiteId, blackId) => {
-  const botAccount = {
-    username: "Bot",
-    _id: process.env.BOT_ID,
-  };
   let status = "";
 
   let moveColor = "White";
@@ -24,10 +20,9 @@ const updateGameStatus = (game, chatTopic, gameOverTopic, whiteId, blackId) => {
     }
   }
 
-  //bot has special account
   statusChatMessage = {
     text: status,
-    ...botAccount,
+    isBot: true,
   };
   client.publish(chatTopic, JSON.stringify(statusChatMessage));
 };

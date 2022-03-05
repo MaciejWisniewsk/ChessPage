@@ -7,20 +7,20 @@
   const chatTopic = `/rooms/${room._id}/chat`;
   client.subscribe(chatTopic);
 
-  function scrollChatMessegesToBottom() {
+  function scrollChatMessagesToBottom() {
     $("#chatMessages").scrollTop($("#chatMessages")[0].scrollHeight);
   }
 
-  scrollChatMessegesToBottom();
+  scrollChatMessagesToBottom();
   client.on("message", function (topic, message) {
     switch (topic) {
       case chatTopic:
-        const { _id, username, text } = JSON.parse(message.toString());
+        const { _id, username, text, isBot } = JSON.parse(message.toString());
         if (_id === user._id) {
           $("#chatMessages").append(
             `<div class="list-group-item list-group-item-secondary">You: ${text}</div>`
           );
-        } else if (username === "Bot") {
+        } else if (isBot) {
           $("#chatMessages").append(
             `<div class="list-group-item list-group-item-primary">Bot: ${text}</div>`
           );
@@ -29,7 +29,7 @@
             `<div class="list-group-item list-group-item-dark">${username}: ${text}</div>`
           );
         }
-        scrollChatMessegesToBottom();
+        scrollChatMessagesToBottom();
         break;
       default:
         return {};
@@ -46,6 +46,7 @@
       _id,
       username,
       text,
+      isBot: false,
     };
     client.publish(
       `/server/rooms/${room._id}/chat`,

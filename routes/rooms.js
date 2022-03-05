@@ -45,7 +45,7 @@ router.get(
       },
     });
     if (!room) {
-      req.flash("error", "Room with given id doesn't exsist");
+      req.flash("error", "Room with given id doesn't exists");
       return res.redirect("/rooms");
     }
     if (!(req.user._id.equals(room.host) || req.user._id.equals(room.guest))) {
@@ -63,7 +63,7 @@ router.post(
     const user = await User.findById(req.user._id);
     const { error } = roomSchema.validate(req.body);
     if (error) {
-      req.flash("error", "You cannot incject code into room name!");
+      req.flash("error", "You cannot inject code into room name!");
       return res.redirect("/rooms");
     }
     const checkRoomUnique = await Room.findOne({ name: req.body.name });
@@ -94,7 +94,7 @@ router.patch(
       return res.redirect("/rooms");
     }
     if (room.host._id === req.user._id) {
-      req.flash("error", "You cannto join to your own room!");
+      req.flash("error", "You cannot join to your own room!");
       return res.redirect("/rooms");
     }
     room.guest = req.user._id;

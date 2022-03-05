@@ -9,7 +9,7 @@ const updateGameStatus = require("./updateGameStatus");
 client.on("message", async function (topic, message) {
   if (topic.match(/^\/server\/rooms\/[^/]*\/chat$/)) {
     const room_id = topic.split("/")[3];
-    const { _id, username, text } = JSON.parse(message.toString());
+    const { _id, username, text, isBot } = JSON.parse(message.toString());
     const { error } = chatMessageSchema.validate({ text });
     const room = await Room.findById(room_id);
     const roomTopic = `/rooms/${room._id}/chat`;
@@ -19,11 +19,14 @@ client.on("message", async function (topic, message) {
         JSON.stringify({ _id, username, text: "User tried to inject code!" })
       );
     } else {
-      const chatMessage = new ChatMessage({ text, author: _id });
+      const chatMessageData = _id
+        ? { text, author: _id, isBot }
+        : { text, isBot };
+      const chatMessage = new ChatMessage(chatMessageData);
       room.chatMessages.push(chatMessage);
       await chatMessage.save();
       await room.save();
-      client.publish(roomTopic, JSON.stringify({ _id, username, text }));
+      client.publish(roomTopic, JSON.stringify({ _id, username, text, isBot }));
     }
   } else if (topic.match(/^\/server\/rooms\/[^/]*\/game\/move$/)) {
     const room_id = topic.split("/")[3];

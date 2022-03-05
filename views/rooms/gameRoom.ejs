@@ -32,12 +32,11 @@
           </div>
           <div id="chatMessages" class="list-group overflow-auto">
             <% room.chatMessages.forEach(message => { %>
-            <% if(!message.author) return %>
             <% if(message.author && message.author.equals(currentUser._id)) {%>
             <div class="list-group-item list-group-item-secondary">You: <%= message.text %></div>
-            <% }else if(message.author.username === "Bot"){ %>
+            <% }else if(message.isBot){ %>
             <div class="list-group-item list-group-item-primary">
-              <%= message.author.username%>: <%= message.text %>
+              Bot: <%= message.text %>
             </div>
             <% } else { %>
             <div class="list-group-item list-group-item-dark">
