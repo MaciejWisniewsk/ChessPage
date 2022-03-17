@@ -2,6 +2,7 @@
   const { password, url, username } = JSON.parse(mqttCredentialsStringified);
   const user = JSON.parse(userStringified);
   const room = JSON.parse(roomStringified);
+  let isGameOver = false;
   const client = mqtt.connect(url, { username, password });
 
   const chatTopic = `/rooms/${room._id}/chat`;
@@ -38,20 +39,22 @@
 
   $("#sendMessage").submit((event) => {
     event.preventDefault();
-    const text = $("#message").val().replace(/\n/g, " ");
-    $("#message").val("");
-    const { _id, username } = user;
-    if (!text.length) return;
-    const dataToSend = {
-      _id,
-      username,
-      text,
-      isBot: false,
-    };
-    client.publish(
-      `/server/rooms/${room._id}/chat`,
-      JSON.stringify(dataToSend)
-    );
+    if (!isGameOver) {
+      const text = $("#message").val().replace(/\n/g, " ");
+      $("#message").val("");
+      const { _id, username } = user;
+      if (!text.length) return;
+      const dataToSend = {
+        _id,
+        username,
+        text,
+        isBot: false,
+      };
+      client.publish(
+        `/server/rooms/${room._id}/chat`,
+        JSON.stringify(dataToSend)
+      );
+    }
   });
 
   $("#message").keypress(function (e) {
@@ -93,7 +96,7 @@
   }
 
   function onDragStart(square, piece, _, _) {
-    if (game.game_over()) return false;
+    if (game.game_over() || isGameOver) return false;
 
     if (
       (game.turn() === "w" && piece.search(/^b/) !== -1) ||
@@ -161,6 +164,7 @@
         }
         break;
       case gameOverTopic:
+        isGameOver = true;
         $("#surrenderButton").hide();
         const { isDraw, winner_id, surrender } = JSON.parse(message.toString());
         if (isDraw) {
