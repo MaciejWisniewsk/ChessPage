@@ -1,42 +1,43 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const ChatMessage = require('./chatMessage')
+const ChatMessage = require("./chatMessage");
 
 const roomSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        unique: true,
-        maxLength: 20
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+    maxLength: 20,
+  },
+  host: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  guest: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
+  chatMessages: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "ChatMessage",
     },
-    host: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    guest: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    chatMessages: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: 'ChatMessage'
-        }
-    ],
-    gameFen: {
-        type: String
-    }
-})
+  ],
+  gameFen: {
+    type: String,
+  },
+});
 
-roomSchema.post('findOneAndDelete', async doc => {
-    if (doc) {
-        await ChatMessage.deleteMany({
-            _id: {
-                $in: doc.chatMessages
-            }
-        })
-    }
-})
+roomSchema.post("findOneAndRemove", async (doc) => {
+  if (doc) {
+    console.log(doc);
+    await ChatMessage.deleteMany({
+      _id: {
+        $in: doc.chatMessages,
+      },
+    });
+  }
+});
 
-module.exports = mongoose.model('Room', roomSchema);
+module.exports = mongoose.model("Room", roomSchema);

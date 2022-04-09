@@ -91,7 +91,7 @@ module.exports.deleteRoom = async (req, res) => {
     req.flash("error", "You must be the room owner!");
     return res.redirect("/rooms");
   }
-  await room.remove();
+  await Room.findByIdAndRemove(id);
   client.publish("rooms/delete", JSON.stringify({ _id: id }));
   req.flash("success", "Room successfully deleted.");
   res.redirect("/rooms");

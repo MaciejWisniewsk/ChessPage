@@ -3,3 +3,4 @@ keys
 .env
 fens.txt
 package-lock.json
+yarn.lock
